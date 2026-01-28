@@ -84,21 +84,22 @@
                             <span class="dot yellow"></span>
                             <span class="dot green"></span>
                         </div>
-                        <span class="window-title">inference.py</span>
+                        <span class="window-title">agent.py</span>
                     </div>
-                    <pre class="code-content"><code><span class="keyword">from</span> vllm <span class="keyword">import</span> LLM
-<span class="keyword">from</span> lmcache <span class="keyword">import</span> KVCache
+                    <pre class="code-content"><code><span class="keyword">from</span> autogen <span class="keyword">import</span> AssistantAgent
+<span class="keyword">from</span> langgraph <span class="keyword">import</span> StateGraph
 
-<span class="comment"># 27× faster inference</span>
-<span class="variable">cache</span> = KVCache(
-    <span class="string">"ssd"</span>,
-    max_tokens=<span class="number">180_000</span>
+<span class="comment"># Multi-agent orchestration</span>
+<span class="variable">infra_agent</span> = AssistantAgent(
+    name=<span class="string">"InfraBot"</span>,
+    llm_config={<span class="string">"model"</span>: <span class="string">"gpt-4"</span>}
 )
 
-<span class="variable">response</span> = llm.generate(
-    context,
-    cache=<span class="variable">cache</span>
-)  <span class="comment"># 39s → 1.43s</span></code></pre>
+<span class="variable">graph</span> = StateGraph()
+<span class="variable">graph</span>.add_node(<span class="variable">infra_agent</span>)
+<span class="variable">graph</span>.add_edge(<span class="string">"monitor"</span>, <span class="string">"provision"</span>)
+
+<span class="variable">result</span> = <span class="variable">graph</span>.run(task)</code></pre>
                 </div>
             </div>
         </section>
@@ -253,38 +254,64 @@
                 <div class="project-tile featured">
                     <div class="tile-header">
                         <div class="tile-icon">
-                            <i class="fas fa-microchip"></i>
+                            <i class="fas fa-video"></i>
                         </div>
                         <div class="tile-links">
-                            <a href="https://github.com/VinsmokeSanji33/CacheBench" target="_blank">
-                                <i class="fab fa-github"></i>
+                            <a href="https://www.solidigm.com/products/technology/mlperf-ai-workloads-with-solidigm-ssds.html#bodycopy4" target="_blank">
+                                <i class="fas fa-external-link-alt"></i>
                             </a>
                         </div>
                     </div>
-                    <h3>CacheBench</h3>
-                    <p class="tile-subtitle">LLM Cache Offload & Inference Benchmarking</p>
+                    <h3>Video Intelligence & Long-Context RAG</h3>
+                    <p class="tile-subtitle">Solidigm / NVIDIA</p>
                     <p class="tile-description">
-                        Benchmarking suite for LLM KV-cache offloading, evaluating large-context inference 
-                        and concurrent workloads.
+                        High-throughput video analytics RAG system with KV-cache offloading architecture 
+                        using vLLM + LMCache on Solidigm NVMe SSDs.
                     </p>
                     <div class="tile-metrics">
                         <div class="metric">
-                            <span class="metric-value">43%</span>
-                            <span class="metric-label">TTFT Reduction</span>
+                            <span class="metric-value">2,371</span>
+                            <span class="metric-label">QPS</span>
                         </div>
                         <div class="metric">
-                            <span class="metric-value">4.3×</span>
-                            <span class="metric-label">Cache-Hit Speed</span>
+                            <span class="metric-value">27×</span>
+                            <span class="metric-label">Faster Inference</span>
                         </div>
                         <div class="metric">
-                            <span class="metric-value">60%</span>
-                            <span class="metric-label">Lower Power</span>
+                            <span class="metric-value">100M</span>
+                            <span class="metric-label">Embeddings</span>
                         </div>
                     </div>
                     <div class="tile-tags">
                         <span>vLLM</span>
                         <span>LMCache</span>
+                        <span>DiskANN</span>
+                        <span>Milvus</span>
                         <span>NVMe</span>
+                    </div>
+                </div>
+
+                <div class="project-tile">
+                    <div class="tile-header">
+                        <div class="tile-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="tile-links">
+                            <a href="https://youtu.be/AB07nAkxP3Q" target="_blank">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <h3>KYAI Observability Platform</h3>
+                    <p class="tile-subtitle">Metrum Insights</p>
+                    <p class="tile-description">
+                        Real-time observability of AI workloads across heterogeneous hardware clusters. 
+                        Presented at Dell Technologies World, AMD AI Day, and Supercomputing (SC).
+                    </p>
+                    <div class="tile-tags">
+                        <span>Prometheus</span>
+                        <span>Grafana</span>
+                        <span>Kubernetes</span>
                         <span>Python</span>
                     </div>
                 </div>
@@ -295,46 +322,28 @@
                             <i class="fas fa-robot"></i>
                         </div>
                         <div class="tile-links">
-                            <a href="https://www.youtube.com/watch?v=vDn2LZiX1Lo" target="_blank">
+                            <a href="https://youtu.be/SSyDenEJxAw" target="_blank">
                                 <i class="fab fa-youtube"></i>
                             </a>
                         </div>
                     </div>
-                    <h3>Humanoid Robot Agent</h3>
-                    <p class="tile-subtitle">Data Center Monitoring + Agentic AI</p>
+                    <h3>Infra Agents — Hybrid Retrieval</h3>
+                    <p class="tile-subtitle">Automated Provisioning & Orchestration</p>
                     <p class="tile-description">
-                        Physical robotics integrated with agentic AI for autonomous server inspection. 
-                        Demonstrated live at Dell Tech World 2025.
+                        Multi-agent systems using AutoGen, CrewAI, and LangGraph with A2A protocol. 
+                        Hybrid retrieval combining Milvus (vector) + Neo4j (graph) for sub-second reasoning.
                     </p>
-                    <div class="tile-tags">
-                        <span>Robotics</span>
-                        <span>AMD EPYC</span>
-                        <span>iDRAC</span>
-                        <span>Agents</span>
-                    </div>
-                </div>
-
-                <div class="project-tile video-tile">
-                    <div class="tile-header">
-                        <div class="tile-icon">
-                            <i class="fas fa-play-circle"></i>
+                    <div class="tile-metrics">
+                        <div class="metric">
+                            <span class="metric-value">20%</span>
+                            <span class="metric-label">Accuracy Boost</span>
                         </div>
                     </div>
-                    <h3>Demo Videos</h3>
-                    <p class="tile-subtitle">Watch the tech in action</p>
-                    <div class="video-links">
-                        <a href="https://youtu.be/AB07nAkxP3Q" target="_blank" class="video-link">
-                            <i class="fab fa-youtube"></i>
-                            <span>Demo 1</span>
-                        </a>
-                        <a href="https://youtu.be/SSyDenEJxAw" target="_blank" class="video-link">
-                            <i class="fab fa-youtube"></i>
-                            <span>Demo 2</span>
-                        </a>
-                        <a href="https://youtu.be/22upJEjsvqM" target="_blank" class="video-link">
-                            <i class="fab fa-youtube"></i>
-                            <span>Demo 3</span>
-                        </a>
+                    <div class="tile-tags">
+                        <span>AutoGen</span>
+                        <span>LangGraph</span>
+                        <span>Neo4j</span>
+                        <span>Milvus</span>
                     </div>
                 </div>
             </div>

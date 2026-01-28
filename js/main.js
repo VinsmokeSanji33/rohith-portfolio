@@ -2,9 +2,9 @@
 const typedTextElement = document.querySelector('.typed-text');
 const phrases = [
     'AI Engineer',
-    'Systems Architect', 
-    'KV-Cache Optimizer',
-    'Infrastructure Builder'
+    'Solution Architect', 
+    'Infrastructure Builder',
+    'KV-Cache Optimizer'
 ];
 let phraseIndex = 0;
 let charIndex = 0;
