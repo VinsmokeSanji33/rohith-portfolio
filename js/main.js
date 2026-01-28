@@ -1,4 +1,11 @@
-// No typing animation - static "AI Engineer"
+// Get base path for GitHub Pages
+function getBasePath() {
+    const path = window.location.pathname;
+    if (path.includes('/rohith-portfolio')) {
+        return '/rohith-portfolio/';
+    }
+    return './';
+}
 
 // Smooth scroll for navigation
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -60,19 +67,13 @@ document.querySelectorAll('section').forEach(section => {
     observer.observe(section);
 });
 
-// Blog System
+// Blog System - Index Page
 const blogContainer = document.getElementById('blog-container');
 const blogEmpty = document.getElementById('blog-empty');
 
-function getBasePath() {
-    const path = window.location.pathname;
-    if (path.includes('/rohith-portfolio/')) {
-        return '/rohith-portfolio/';
-    }
-    return '/';
-}
-
 async function loadBlogs() {
+    if (!blogContainer) return;
+    
     try {
         const basePath = getBasePath();
         const response = await fetch(basePath + 'blogs/index.json');
@@ -81,11 +82,11 @@ async function loadBlogs() {
         const blogs = await response.json();
         
         if (blogs.length === 0) {
-            blogEmpty.style.display = 'block';
+            if (blogEmpty) blogEmpty.style.display = 'block';
             return;
         }
         
-        blogEmpty.style.display = 'none';
+        if (blogEmpty) blogEmpty.style.display = 'none';
         blogContainer.innerHTML = '';
         
         blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -97,7 +98,7 @@ async function loadBlogs() {
         
     } catch (error) {
         console.log('No blogs found or error loading:', error);
-        blogEmpty.style.display = 'block';
+        if (blogEmpty) blogEmpty.style.display = 'block';
     }
 }
 
@@ -105,7 +106,7 @@ function createBlogCard(blog) {
     const card = document.createElement('a');
     card.className = 'blog-card';
     const basePath = getBasePath();
-    card.href = `${basePath}blog.html?slug=${blog.slug}`;
+    card.href = basePath + 'blog.html?slug=' + blog.slug;
     
     const date = new Date(blog.date).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -113,72 +114,76 @@ function createBlogCard(blog) {
         day: 'numeric'
     });
     
-    card.innerHTML = `
-        <div class="blog-date">${date}</div>
-        <h3>${blog.title}</h3>
-        <p class="blog-excerpt">${blog.excerpt}</p>
-        ${blog.tags ? `
-            <div class="blog-tags">
-                ${blog.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('')}
-            </div>
-        ` : ''}
-    `;
+    let tagsHtml = '';
+    if (blog.tags && blog.tags.length > 0) {
+        tagsHtml = '<div class="blog-tags">' + 
+            blog.tags.map(tag => '<span class="blog-tag">' + tag + '</span>').join('') + 
+            '</div>';
+    }
+    
+    card.innerHTML = 
+        '<div class="blog-date">' + date + '</div>' +
+        '<h3>' + blog.title + '</h3>' +
+        '<p class="blog-excerpt">' + blog.excerpt + '</p>' +
+        tagsHtml;
     
     return card;
 }
 
-// Load blogs on page load
-if (blogContainer) {
-    loadBlogs();
-}
-
 // Blog Post Page
 async function loadBlogPost() {
+    const postContainer = document.getElementById('blog-post-container');
+    if (!postContainer) return;
+    
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('slug');
     const basePath = getBasePath();
     
     if (!slug) {
-        window.location.href = basePath + 'index.html#blog';
+        postContainer.innerHTML = '<div style="padding: 8rem 2rem; text-align: center;"><p>No blog post specified.</p><a href="' + basePath + 'index.html#blog" style="color: #00ffc8;">← Back to Blog</a></div>';
         return;
     }
     
     try {
-        const response = await fetch(basePath + `blogs/${slug}.md`);
+        const response = await fetch(basePath + 'blogs/' + slug + '.md');
         if (!response.ok) throw new Error('Blog post not found');
         
         const markdown = await response.text();
-        const { meta, content } = parseMarkdown(markdown);
+        const parsed = parseMarkdown(markdown);
         
-        document.title = `${meta.title} | Rohith Behera`;
+        document.title = parsed.meta.title + ' | Rohith Behera';
         
-        const postContainer = document.getElementById('blog-post-container');
-        if (postContainer) {
-            const date = new Date(meta.date).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            
-            postContainer.innerHTML = `
-                <article class="blog-post">
-                    <header class="blog-post-header">
-                        <h1 class="blog-post-title">${meta.title}</h1>
-                        <div class="blog-post-meta">
-                            <span>${date}</span>
-                            ${meta.readTime ? `<span>${meta.readTime} min read</span>` : ''}
-                        </div>
-                    </header>
-                    <div class="blog-post-content">
-                        ${marked.parse(content)}
-                    </div>
-                </article>
-            `;
+        const date = new Date(parsed.meta.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        let readTimeHtml = '';
+        if (parsed.meta.readTime) {
+            readTimeHtml = '<span>' + parsed.meta.readTime + ' min read</span>';
         }
+        
+        postContainer.innerHTML = 
+            '<article class="blog-post">' +
+                '<header class="blog-post-header">' +
+                    '<h1 class="blog-post-title">' + parsed.meta.title + '</h1>' +
+                    '<div class="blog-post-meta">' +
+                        '<span>' + date + '</span>' +
+                        readTimeHtml +
+                    '</div>' +
+                '</header>' +
+                '<div class="blog-post-content">' +
+                    marked.parse(parsed.content) +
+                '</div>' +
+                '<div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #2a2a40;">' +
+                    '<a href="' + basePath + 'index.html#blog" style="color: #00ffc8; text-decoration: none;">← Back to Blog</a>' +
+                '</div>' +
+            '</article>';
         
     } catch (error) {
         console.error('Error loading blog post:', error);
-        window.location.href = basePath + 'index.html#blog';
+        postContainer.innerHTML = '<div style="padding: 8rem 2rem; text-align: center;"><p>Blog post not found.</p><a href="' + basePath + 'index.html#blog" style="color: #00ffc8;">← Back to Blog</a></div>';
     }
 }
 
@@ -189,7 +194,8 @@ function parseMarkdown(markdown) {
     let contentLines = [];
     let frontMatterEnded = false;
     
-    for (const line of lines) {
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
         if (line.trim() === '---' && !frontMatterEnded) {
             if (inFrontMatter) {
                 frontMatterEnded = true;
@@ -208,7 +214,7 @@ function parseMarkdown(markdown) {
     }
     
     const meta = {};
-    frontMatterLines.forEach(line => {
+    frontMatterLines.forEach(function(line) {
         const colonIndex = line.indexOf(':');
         if (colonIndex > 0) {
             const key = line.substring(0, colonIndex).trim();
@@ -221,20 +227,28 @@ function parseMarkdown(markdown) {
     });
     
     return {
-        meta,
+        meta: meta,
         content: contentLines.join('\n')
     };
 }
 
-// Check if on blog post page
-if (window.location.pathname.includes('blog.html')) {
-    loadBlogPost();
-}
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Load blogs on index page
+    if (blogContainer) {
+        loadBlogs();
+    }
+    
+    // Load blog post on blog page
+    if (document.getElementById('blog-post-container')) {
+        loadBlogPost();
+    }
+});
 
 // Counter animation for stats
 function animateValue(element, start, end, duration) {
     let startTimestamp = null;
-    const step = (timestamp) => {
+    const step = function(timestamp) {
         if (!startTimestamp) startTimestamp = timestamp;
         const progress = Math.min((timestamp - startTimestamp) / duration, 1);
         const value = Math.floor(progress * (end - start) + start);
@@ -247,20 +261,20 @@ function animateValue(element, start, end, duration) {
 }
 
 // Animate stats on scroll
-const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
+const statsObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
         if (entry.isIntersecting) {
             const statValues = entry.target.querySelectorAll('.stat-value');
-            statValues.forEach(stat => {
+            statValues.forEach(function(stat) {
                 const text = stat.textContent;
                 const numMatch = text.match(/[\d,]+/);
                 if (numMatch && !stat.dataset.animated) {
                     const num = parseInt(numMatch[0].replace(/,/g, ''));
                     stat.dataset.animated = 'true';
                     stat.textContent = '0';
-                    setTimeout(() => {
+                    setTimeout(function() {
                         animateValue(stat, 0, num, 2000);
-                        setTimeout(() => {
+                        setTimeout(function() {
                             stat.textContent = text;
                         }, 2100);
                     }, 200);
@@ -274,4 +288,3 @@ const heroStats = document.querySelector('.hero-stats');
 if (heroStats) {
     statsObserver.observe(heroStats);
 }
-
