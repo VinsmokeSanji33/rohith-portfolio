@@ -1,41 +1,4 @@
-// Typing Animation
-const typedTextElement = document.querySelector('.typed-text');
-const phrases = [
-    'AI Engineer',
-    'Solution Architect', 
-    'Infrastructure Builder',
-    'KV-Cache Optimizer'
-];
-let phraseIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
-
-function typeText() {
-    const currentPhrase = phrases[phraseIndex];
-    
-    if (isDeleting) {
-        typedTextElement.textContent = currentPhrase.substring(0, charIndex - 1);
-        charIndex--;
-    } else {
-        typedTextElement.textContent = currentPhrase.substring(0, charIndex + 1);
-        charIndex++;
-    }
-    
-    let typeSpeed = isDeleting ? 50 : 100;
-    
-    if (!isDeleting && charIndex === currentPhrase.length) {
-        typeSpeed = 2000;
-        isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        phraseIndex = (phraseIndex + 1) % phrases.length;
-        typeSpeed = 500;
-    }
-    
-    setTimeout(typeText, typeSpeed);
-}
-
-document.addEventListener('DOMContentLoaded', typeText);
+// No typing animation - static "AI Engineer"
 
 // Smooth scroll for navigation
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -98,13 +61,21 @@ document.querySelectorAll('section').forEach(section => {
 });
 
 // Blog System
-const BLOGS_INDEX = 'blogs/index.json';
 const blogContainer = document.getElementById('blog-container');
 const blogEmpty = document.getElementById('blog-empty');
 
+function getBasePath() {
+    const path = window.location.pathname;
+    if (path.includes('/rohith-portfolio/')) {
+        return '/rohith-portfolio/';
+    }
+    return '/';
+}
+
 async function loadBlogs() {
     try {
-        const response = await fetch(BLOGS_INDEX);
+        const basePath = getBasePath();
+        const response = await fetch(basePath + 'blogs/index.json');
         if (!response.ok) throw new Error('Blog index not found');
         
         const blogs = await response.json();
@@ -133,7 +104,8 @@ async function loadBlogs() {
 function createBlogCard(blog) {
     const card = document.createElement('a');
     card.className = 'blog-card';
-    card.href = `blog.html?slug=${blog.slug}`;
+    const basePath = getBasePath();
+    card.href = `${basePath}blog.html?slug=${blog.slug}`;
     
     const date = new Date(blog.date).toLocaleDateString('en-US', {
         year: 'numeric',
@@ -164,14 +136,15 @@ if (blogContainer) {
 async function loadBlogPost() {
     const params = new URLSearchParams(window.location.search);
     const slug = params.get('slug');
+    const basePath = getBasePath();
     
     if (!slug) {
-        window.location.href = 'index.html#blog';
+        window.location.href = basePath + 'index.html#blog';
         return;
     }
     
     try {
-        const response = await fetch(`blogs/${slug}.md`);
+        const response = await fetch(basePath + `blogs/${slug}.md`);
         if (!response.ok) throw new Error('Blog post not found');
         
         const markdown = await response.text();
@@ -205,7 +178,7 @@ async function loadBlogPost() {
         
     } catch (error) {
         console.error('Error loading blog post:', error);
-        window.location.href = 'index.html#blog';
+        window.location.href = basePath + 'index.html#blog';
     }
 }
 
