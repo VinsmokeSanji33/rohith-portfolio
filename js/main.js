@@ -1,9 +1,5 @@
-// Get base path for GitHub Pages
+// Get base path for GitHub Pages - use relative paths that work everywhere
 function getBasePath() {
-    const path = window.location.pathname;
-    if (path.includes('/rohith-portfolio')) {
-        return '/rohith-portfolio/';
-    }
     return './';
 }
 
