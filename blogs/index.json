@@ -1,0 +1,11 @@
+[
+  {
+    "slug": "kv-cache-offloading-27x-speedup",
+    "title": "Achieving 27x Inference Speedup with KV-Cache Offloading",
+    "date": "2025-01-15",
+    "excerpt": "How we reduced 180K-token inference from 39 seconds to 1.43 seconds using SSD-backed KV cache offloading with vLLM and LMCache.",
+    "tags": ["LLM", "Performance", "vLLM", "LMCache"],
+    "readTime": 8
+  }
+]
+
