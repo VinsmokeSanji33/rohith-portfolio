@@ -6,5 +6,13 @@
     "excerpt": "How we reduced 180K-token inference from 39 seconds to 1.43 seconds using SSD-backed KV cache offloading with vLLM and LMCache.",
     "tags": ["LLM", "Performance", "vLLM", "LMCache"],
     "readTime": 8
-  }
+  },
+  {
+  "slug": "LLM Inference",
+  "title": "Paradigms in Large Language Model Inference and Infrastructure Optimization",
+  "date": "2026-02-06",
+  "excerpt": "deep dive to llm infernce ",
+"tags": ["LLM", "Performance", "vLLM"],
+  "readTime": 20
+}
 ]
