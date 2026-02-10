@@ -1,3 +1,12 @@
+---
+title: "Python Mastery"
+date: "10-02-26"
+author: "Rohith Behera"
+readTime: 5
+tags: ["python"]
+---
+
+
 # Python Mastery Guide: Google Interview Preparation
 
 ## Table of Contents
