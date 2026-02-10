@@ -14,5 +14,12 @@
   "excerpt": "deep dive to llm infernce ",
 "tags": ["LLM", "Performance", "vLLM"],
   "readTime": 20
+},  {
+  "slug": "python mastery",
+  "title": "python mastery",
+  "date": "2026-02-10",
+  "excerpt": "python mastery ",
+"tags": ["python"],
+  "readTime": 15
 }
 ]
