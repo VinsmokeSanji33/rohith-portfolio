@@ -19,17 +19,16 @@
   "title": "python mastery",
   "date": "2026-02-10",
   "excerpt": "python mastery ",
-"tags": ["python"],
+  "tags": ["python"],
   "readTime": 15
 }
-  ,{
-
-      "slug": "Edge AI Deployment",
+  ,
+{
+  "slug": "Edge_AI_Deployment",
   "title": "Edge AI Deployment",
   "date": "2026-05-01",
   "excerpt": "Edge AI Deployment ",
-"tags": ["python"],
-    "readTime": 15
-
+  "tags": ["python"],
+  "readTime": 15
   },
 ]
