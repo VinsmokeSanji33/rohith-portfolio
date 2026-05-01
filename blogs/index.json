@@ -22,4 +22,14 @@
 "tags": ["python"],
   "readTime": 15
 }
+  ,{
+
+      "slug": "Edge AI Deployment",
+  "title": "Edge AI Deployment",
+  "date": "2026-05-01",
+  "excerpt": "Edge AI Deployment ",
+"tags": ["python"],
+    "readTime": 15
+
+  },
 ]
