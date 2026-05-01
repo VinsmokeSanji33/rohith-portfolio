@@ -1,11 +1,10 @@
-﻿---
+---
 title: "Edge AI Deployment"
-date: "2025-05-01"
+date: "01-05-26"
 author: "Rohith Behera"
 readTime: 5
-tags: ["EdgeAIDeployment"]
+tags: ["Edge AI Deployment"]
 ---
-
 
 # Edge AI Deployment: Complete Technical Reference
 
