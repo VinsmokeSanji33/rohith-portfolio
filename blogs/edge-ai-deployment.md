@@ -3,7 +3,7 @@ title: "Edge AI Deployment"
 date: "2025-05-01"
 author: "Rohith Behera"
 readTime: 5
-tags: ["Edge AI Deployment"]
+tags: ["EdgeAIDeployment"]
 ---
 
 
